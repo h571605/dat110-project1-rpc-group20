@@ -40,7 +40,6 @@ public class RPCServer {
 	    
 		   byte rpcid = 0;
 		   Message requestmsg, replymsg;
-		   
 		   // TODO - START
 		   // - receive a Message containing an RPC request
 		   // - extract the identifier for the RPC method to be invoked from the RPC request
@@ -49,10 +48,29 @@ public class RPCServer {
 		   // - invoke the method and pass the param
 		   // - encapsulate return value 
 		   // - send back the message containing the RPC reply
-			
-		   if (true)
-				throw new UnsupportedOperationException(TODO.method());
-		   
+		   try{
+			   requestmsg = connection.receive();
+			   byte[] requestData = requestmsg.getData();
+
+			   rpcid = requestData[0];
+
+			   byte[] param = RPCUtils.decapsulate(requestData);
+
+			   RPCRemoteImpl remoteobj = services.get(rpcid);
+			   if (remoteobj == null) {
+				   continue;
+			   }
+
+			   byte[] returnval = remoteobj.invoke(param);
+
+			   byte[] replyData = RPCUtils.encapsulate(rpcid, returnval);
+
+			   replymsg = new Message(replyData);
+			   connection.send(replymsg);
+		   }catch (Exception e){
+			   e.printStackTrace();
+		   }
+
 		   // TODO - END
 
 			// stop the server if it was stop methods that was called

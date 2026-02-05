@@ -11,9 +11,9 @@ public class Message {
 	public Message(byte[] data) {
 		// TODO - START
 		if(data == null)
-			throw new illegalArgumentException("data is null");
+			throw new IllegalArgumentException("data is null");
 		if (data.length > 127)
-			throw new illegalArgumentException("data is more than 127 bytes");
+			throw new IllegalArgumentException("data is more than 127 bytes");
 		this.data = data;
 		// TODO - END
 	}
